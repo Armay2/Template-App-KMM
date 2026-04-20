@@ -13,6 +13,15 @@ local.properties
 *.iml
 *.ipr
 *.iws
+captures/
+.cxx/
+
+# Android build artifacts / signing
+*.apk
+*.aab
+*.jks
+*.keystore
+keystore.properties
 
 # Xcode
 xcuserdata/
@@ -21,6 +30,23 @@ DerivedData/
 Pods/
 *.xcworkspace/xcuserdata/
 iosApp/iosApp.xcodeproj/project.xcworkspace/xcuserdata/
+*.hmap
+*.ipa
+*.dSYM.zip
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# Coverage
+*.profraw
+*.profdata
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
 
 # macOS / OS
 .DS_Store
