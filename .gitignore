@@ -1,0 +1,32 @@
+# Gradle
+.gradle/
+build/
+**/build/
+local.properties
+
+# Kotlin
+*.kotlin_module
+.kotlin/
+
+# IntelliJ / Android Studio
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Xcode
+xcuserdata/
+*.xcuserstate
+DerivedData/
+Pods/
+*.xcworkspace/xcuserdata/
+iosApp/iosApp.xcodeproj/project.xcworkspace/xcuserdata/
+
+# macOS / OS
+.DS_Store
+
+# Node (if ever used for tooling)
+node_modules/
+
+# Logs
+*.log
