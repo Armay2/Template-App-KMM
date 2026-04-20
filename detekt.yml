@@ -1,0 +1,2 @@
+# Minimal detekt config — defaults kick in via `buildUponDefaultConfig = true`.
+# Task 5.1 replaces this with the project's tuned ruleset.

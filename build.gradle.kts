@@ -11,7 +11,7 @@ plugins {
     alias(libs.plugins.ktlint)
 }
 
-allprojects {
+subprojects {
     apply(plugin = rootProject.libs.plugins.detekt.get().pluginId)
     apply(plugin = rootProject.libs.plugins.ktlint.get().pluginId)
 }
