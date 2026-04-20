@@ -42,6 +42,7 @@ kotlin {
             implementation(libs.ktor.client.logging)
             implementation(libs.ktor.serialization.json)
             implementation(libs.koin.core)
+            implementation(libs.koin.core.viewmodel)
             implementation(libs.kermit)
             implementation(libs.multiplatform.settings)
             implementation(libs.multiplatform.settings.coroutines)
