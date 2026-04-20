@@ -17,6 +17,7 @@ dependencyResolutionManagement {
     }
 }
 
-// Modules are included as they are created in later tasks:
-// - `:shared` added in Task 1.1
+include(":shared")
+
+// Remaining modules are added in later tasks:
 // - `:androidApp` added in Task 3.1

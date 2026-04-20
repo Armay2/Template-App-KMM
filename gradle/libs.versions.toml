@@ -20,7 +20,7 @@ androidxLifecycleCompose = "2.8.7"
 jbLifecycle = "2.8.4" # JetBrains KMP fork of androidx.lifecycle (ViewModel/viewModelScope in commonMain)
 detekt = "1.23.7"
 ktlint = "12.1.2"
-skie = "0.10.1"
+skie = "0.10.11"
 
 [libraries]
 kotlin-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
