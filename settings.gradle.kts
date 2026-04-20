@@ -18,6 +18,4 @@ dependencyResolutionManagement {
 }
 
 include(":shared")
-
-// Remaining modules are added in later tasks:
-// - `:androidApp` added in Task 3.1
+include(":androidApp")

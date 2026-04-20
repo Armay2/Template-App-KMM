@@ -17,6 +17,7 @@ composeNavigation = "2.8.4"
 androidxCore = "1.15.0"
 androidxLifecycle = "2.8.7"
 androidxLifecycleCompose = "2.8.7"
+androidMaterial = "1.12.0"
 jbLifecycle = "2.8.4" # JetBrains KMP fork of androidx.lifecycle (ViewModel/viewModelScope in commonMain)
 detekt = "1.23.7"
 ktlint = "12.1.2"
@@ -64,6 +65,7 @@ compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 compose-material3 = { module = "androidx.compose.material3:material3" }
 compose-activity = { module = "androidx.activity:activity-compose", version.ref = "composeActivity" }
 compose-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
+android-material = { module = "com.google.android.material:material", version.ref = "androidMaterial" }
 
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
