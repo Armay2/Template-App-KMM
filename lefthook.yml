@@ -1,0 +1,24 @@
+pre-commit:
+  parallel: true
+  commands:
+    ktlint:
+      glob: "*.{kt,kts}"
+      run: ./gradlew ktlintFormat --daemon
+      stage_fixed: true
+    detekt:
+      glob: "*.{kt,kts}"
+      run: ./gradlew detekt --daemon
+    swiftformat:
+      glob: "*.swift"
+      run: swiftformat --quiet {staged_files}
+      stage_fixed: true
+    swiftlint:
+      glob: "*.swift"
+      run: swiftlint lint --quiet {staged_files}
+
+commit-msg:
+  commands:
+    conventional:
+      run: |
+        head -n1 "$1" | grep -Eq '^(feat|fix|docs|chore|refactor|test|style|ci|build|perf)(\([^)]+\))?: .+' \
+          || (echo "Commit message must follow Conventional Commits"; exit 1)
