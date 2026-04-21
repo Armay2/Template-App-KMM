@@ -25,6 +25,7 @@ jbLifecycle = "2.9.0" # JetBrains KMP fork of androidx.lifecycle (ViewModel/view
 detekt = "1.23.8"
 ktlint = "12.1.2"
 skie = "0.10.11"
+ksp = "2.2.10-2.0.2"
 
 [libraries]
 kotlin-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -70,6 +71,11 @@ compose-activity = { module = "androidx.activity:activity-compose", version.ref 
 compose-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "composeNavigation" }
 android-material = { module = "com.google.android.material:material", version.ref = "androidMaterial" }
 
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+agp-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
+skie-gradle-plugin = { module = "co.touchlab.skie:gradle-plugin", version.ref = "skie" }
+ksp-gradle-plugin = { module = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
+
 [plugins]
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
@@ -80,4 +86,4 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 skie = { id = "co.touchlab.skie", version.ref = "skie" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
-ksp = { id = "com.google.devtools.ksp", version = "2.2.10-2.0.2" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
