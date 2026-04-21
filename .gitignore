@@ -56,3 +56,7 @@ node_modules/
 
 # Logs
 *.log
+
+# Local workflow notes (plans, specs, scratch) — keep out of public repo
+docs/superpowers/
+
