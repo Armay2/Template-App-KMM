@@ -2,8 +2,8 @@
 # Source: https://github.com/touchlab/SKIE/blob/main/common-gradle/gradle.properties
 # `versionSupport.kotlin` lists supported pairs; 0.10.11 covers up to 2.3.20, we keep the 2.2.10 floor per consolidation plan.
 [versions]
-kotlin = "2.1.0"
-agp = "8.7.2"
+kotlin = "2.2.10"
+agp = "8.11.2"
 coroutines = "1.9.0"
 serialization = "1.7.3"
 datetime = "0.6.1"
@@ -80,4 +80,4 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 skie = { id = "co.touchlab.skie", version.ref = "skie" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
-ksp = { id = "com.google.devtools.ksp", version = "2.1.0-1.0.29" }
+ksp = { id = "com.google.devtools.ksp", version = "2.2.10-2.0.2" }
