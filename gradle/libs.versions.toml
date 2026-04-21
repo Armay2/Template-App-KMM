@@ -22,7 +22,7 @@ androidxLifecycle = "2.8.7"
 androidxLifecycleCompose = "2.8.7"
 androidMaterial = "1.12.0"
 jbLifecycle = "2.8.4" # JetBrains KMP fork of androidx.lifecycle (ViewModel/viewModelScope in commonMain)
-detekt = "1.23.7"
+detekt = "1.23.8"
 ktlint = "12.1.2"
 skie = "0.10.11"
 
