@@ -49,10 +49,11 @@ class TodoListViewModelTest {
     fun loadsTodosOnRefresh() =
         runTest(dispatcher) {
             val vm = vm(listOf(TodoDto("1", "a", "", false)))
-            vm.onRefresh()
-            dispatcher.scheduler.advanceUntilIdle()
-            assertEquals(1, vm.state.value.todos.size)
-            assertIs<UiStatus.Idle>(vm.state.value.status)
+            // Wait on the state predicate rather than the scheduler: Ktor MockEngine runs on
+            // its own dispatcher, so advanceUntilIdle() doesn't drain the api.list() suspension.
+            val state = vm.state.first { it.todos.isNotEmpty() }
+            assertEquals(1, state.todos.size)
+            assertIs<UiStatus.Idle>(state.status)
         }
 
     @Test
