@@ -6,6 +6,14 @@ Use this as the starting point of a greenfield app, or as a reference for how to
 
 > Status: `v0.1.0` — stable enough to build real features on top. See [`CHANGELOG.md`](CHANGELOG.md).
 
+## A note from the author
+
+I built this as a **lightweight starting point** for any kind of KMM app — something opinionated enough to be useful on day one, but small enough that you can read it end-to-end in an afternoon.
+
+It also reflects **my own vision** of how a KMP codebase should be wired: a firm line between shared logic and native UI, a single generic iOS bridge, plain interfaces + DI instead of `expect`/`actual` for platform work, and vendor-neutral observability by default.
+
+This is a **v1 architecture**, not a final one. It will naturally need to evolve for larger projects — typically around persistence (adding SQLDelight or Room), modularization (splitting `shared` into feature modules), authentication, offline-first strategies, or deeper navigation graphs. The [`docs/06-extension-paths/`](docs/06-extension-paths/) folder is where I've sketched those natural growth directions.
+
 ## Why this template
 
 - **Native UI, shared logic.** The shared module stops at the ViewModel. UIs stay idiomatic on each platform — no Compose Multiplatform, no SwiftUI-over-Kotlin.
