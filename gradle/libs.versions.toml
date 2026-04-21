@@ -1,3 +1,6 @@
+# Kotlin pinned to 2.2.10 (max compat with SKIE 0.10.11, checked 2026-04-21).
+# Source: https://github.com/touchlab/SKIE/blob/main/common-gradle/gradle.properties
+# `versionSupport.kotlin` lists supported pairs; 0.10.11 covers up to 2.3.20, we keep the 2.2.10 floor per consolidation plan.
 [versions]
 kotlin = "2.1.0"
 agp = "8.7.2"
