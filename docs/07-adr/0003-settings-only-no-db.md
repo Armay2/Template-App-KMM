@@ -11,7 +11,7 @@ We still need a place to store small scalars — auth tokens, feature flags, onb
 
 ## Decision
 
-Ship only `multiplatform-settings` wrapped in a small `KeyValueStore` abstraction (`shared/src/commonMain/kotlin/com/electra/template/data/storage/KeyValueStore.kt`). Provide `expect class SettingsFactory` with `SharedPreferencesSettings` (Android) and `NSUserDefaultsSettings` (iOS) implementations. Data lists (e.g. `Todo`) live in an in-memory `MutableStateFlow` inside the repository and are refetched on startup. Document the SQLDelight / Room KMP upgrade path in `docs/06-extension-paths/adding-persistence.md`.
+Ship only `multiplatform-settings` wrapped in a small `KeyValueStore` abstraction (`shared/src/commonMain/kotlin/com/electra/template/data/storage/KeyValueStore.kt`). Expose a common `SettingsFactory` interface with platform classes `AndroidSettingsFactory` (backed by `SharedPreferencesSettings`) and `IosSettingsFactory` (backed by `NSUserDefaultsSettings`), wired via `androidPlatformModule` / `iosPlatformModule`. Data lists (e.g. `Todo`) live in an in-memory `MutableStateFlow` inside the repository and are refetched on startup. Document the SQLDelight / Room KMP upgrade path in `docs/06-extension-paths/adding-persistence.md`.
 
 ## Consequences
 

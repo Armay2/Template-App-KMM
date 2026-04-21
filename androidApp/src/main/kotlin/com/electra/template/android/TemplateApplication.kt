@@ -2,8 +2,8 @@ package com.electra.template.android
 
 import android.app.Application
 import com.electra.template.android.di.androidModule
+import com.electra.template.core.di.androidPlatformModule
 import com.electra.template.core.di.coreModule
-import com.electra.template.core.di.platformModule
 import com.electra.template.data.todo.todoModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -15,7 +15,7 @@ class TemplateApplication : Application() {
         startKoin {
             androidLogger()
             androidContext(this@TemplateApplication)
-            modules(coreModule, platformModule, todoModule, androidModule)
+            modules(coreModule, androidPlatformModule, todoModule, androidModule)
         }
     }
 }

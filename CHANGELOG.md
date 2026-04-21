@@ -4,6 +4,8 @@ All notable changes to this template will be documented here.
 Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning: [SemVer](https://semver.org/).
 
 ## [Unreleased]
+### Changed
+- Replaced Kotlin `expect/actual` with plain interfaces + platform classes injected via Koin. `SettingsFactory` is now an interface in `commonMain`; `AndroidSettingsFactory` / `IosSettingsFactory` implement it. `platformModule` split into `androidPlatformModule` / `iosPlatformModule`. Removed the `-Xexpect-actual-classes` compiler flag.
 
 ## [0.1.0] - 2026-04-21
 ### Added

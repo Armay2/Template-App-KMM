@@ -9,7 +9,7 @@ After reading this you'll have a concrete plan for token-based auth on top of th
 - Android: `androidx.security:security-crypto` + `EncryptedSharedPreferencesSettings`.
 - iOS: a custom `Settings` backed by `SecItemAdd/Copy` or a library like `KeychainStore`.
 
-Both plug into `SettingsFactory.android.kt` / `SettingsFactory.ios.kt`.
+Both plug into `AndroidSettingsFactory` / `IosSettingsFactory` — or add a second factory (e.g. `SecureSettingsFactory`) alongside the default so sensitive data lives in a separate store.
 
 ## Ktor Auth plugin
 

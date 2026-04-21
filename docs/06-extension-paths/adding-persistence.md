@@ -4,7 +4,7 @@ After reading this you'll know which local-DB options fit the template, what the
 
 ## What's already there
 
-`shared/src/commonMain/kotlin/com/electra/template/data/storage/KeyValueStore.kt` wraps `multiplatform-settings` (`com.russhwolf:multiplatform-settings`) for key-value needs: feature flags, selected theme, auth tokens, small user preferences. `SettingsFactory` is an `expect` with `SharedPreferencesSettings` on Android and `NSUserDefaultsSettings` on iOS.
+`shared/src/commonMain/kotlin/com/electra/template/data/storage/KeyValueStore.kt` wraps `multiplatform-settings` (`com.russhwolf:multiplatform-settings`) for key-value needs: feature flags, selected theme, auth tokens, small user preferences. `SettingsFactory` is a common **interface** with platform classes: `AndroidSettingsFactory` (backed by `SharedPreferencesSettings`) and `IosSettingsFactory` (backed by `NSUserDefaultsSettings`), bound respectively by `androidPlatformModule` and `iosPlatformModule`.
 
 This covers "a few scalars per user", not "the app's main data store". For lists, joins, sync queues, or anything relational, add a real database.
 
@@ -21,12 +21,12 @@ This covers "a few scalars per user", not "the app's main data store". For lists
    ```
    Register the new version in `gradle/libs.versions.toml`.
 2. Put `.sq` files under `shared/src/commonMain/sqldelight/<package>/`.
-3. Provide the driver through `expect class DatabaseDriverFactory` (Android: `AndroidSqliteDriver(schema, context, "app.db")`, iOS: `NativeSqliteDriver(schema, "app.db")`) exactly like `SettingsFactory` today.
+3. Provide the driver through a common `DatabaseDriverFactory` interface with `AndroidDatabaseDriverFactory` (backed by `AndroidSqliteDriver(schema, context, "app.db")`) and `IosDatabaseDriverFactory` (backed by `NativeSqliteDriver(schema, "app.db")`) — bound in `androidPlatformModule` / `iosPlatformModule`, exactly the same pattern as `SettingsFactory`.
 4. Bind `AppDatabase(get())` as a `single` in `coreModule` and replace `TodoRepositoryImpl`'s `MutableStateFlow` cache with a query `asFlow()`.
 
 ## Alternative: Room KMP
 
-Room has preview-quality KMP support now. It's a better fit if you have a strong Android-side bias in your team or already run migrations on SQLite via Room. Integration steps mirror SQLDelight; Room needs KSP (already configured — see `libs.plugins.ksp` in `shared/build.gradle.kts`) and an `expect` factory to hand Room the correct builder per platform.
+Room has preview-quality KMP support now. It's a better fit if you have a strong Android-side bias in your team or already run migrations on SQLite via Room. Integration steps mirror SQLDelight; Room needs KSP (already configured — see `libs.plugins.ksp` in `shared/build.gradle.kts`) and a common `RoomDatabaseFactory` interface with one implementation per platform, bound in the matching platform Koin module.
 
 ## Where to slot it
 

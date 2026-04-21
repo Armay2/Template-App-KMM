@@ -26,7 +26,7 @@ val androidModule = module {
 }
 ```
 
-For iOS, add an iOS-only Kotlin impl in `shared/src/iosMain/` or a Swift impl wrapped in a Kotlin `expect class` — whichever is cleaner for the vendor's SDK. Keep `NoopAnalyticsTracker` as the `commonMain` default so tests and previews never require a live SDK.
+For iOS, add an iOS-only Kotlin impl in `shared/src/iosMain/` (e.g. `IosAnalyticsTracker : AnalyticsTracker`) and bind it in `iosPlatformModule`. If the vendor SDK is Swift-only, wrap it on the Swift side and expose a thin Kotlin interface the Kotlin-side consumers use. Keep `NoopAnalyticsTracker` as the `commonMain` default so tests and previews never require a live SDK.
 
 ## Call sites
 

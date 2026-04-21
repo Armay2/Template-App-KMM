@@ -17,7 +17,7 @@ After reading this you'll understand what lives in `shared` and what must stay n
 - Any `@Composable` or `View` — rendered with Compose / Material 3 on Android and SwiftUI / Liquid Glass on iOS.
 - Navigation host — `NavHost` on Android, `NavigationStack` on iOS.
 - DI host (Koin start-up): `TemplateApplication.kt` on Android, `KoinInitializer().doInit()` on iOS.
-- Platform-specific implementations behind `expect/actual` (`SettingsFactory`, `platformModule`).
+- Platform-specific implementations behind common interfaces. `SettingsFactory` is an interface in `commonMain`; `AndroidSettingsFactory` / `IosSettingsFactory` live in `androidMain` / `iosMain`. Platform-specific Koin modules (`androidPlatformModule`, `iosPlatformModule`) bind the right one at startup. No `expect/actual` — just dependency injection.
 
 ## Why this line
 

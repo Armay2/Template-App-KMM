@@ -13,7 +13,6 @@ kotlin {
     @OptIn(ExperimentalKotlinGradlePluginApi::class)
     compilerOptions {
         freeCompilerArgs.addAll(
-            "-Xexpect-actual-classes",
             "-Xconsistent-data-class-copy-visibility",
         )
     }
