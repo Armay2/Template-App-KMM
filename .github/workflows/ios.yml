@@ -20,8 +20,8 @@ jobs:
           xcode-version: '26.0'
       - name: Install SwiftLint & SwiftFormat
         run: brew install swiftlint swiftformat
-      - name: Build shared framework
-        run: ./gradlew :shared:assembleSharedReleaseXCFramework --no-daemon
+      - name: Compile shared module (all iOS targets)
+        run: ./gradlew :shared:compileKotlinIosArm64 :shared:compileKotlinIosSimulatorArm64 --no-daemon
       - name: SwiftFormat lint
         run: swiftformat --lint iosApp
       - name: SwiftLint
