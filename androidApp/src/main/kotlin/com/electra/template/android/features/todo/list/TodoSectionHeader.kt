@@ -41,13 +41,14 @@ fun TodoSectionHeader(
     )
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable {
-                haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-                onToggle()
-            }
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clickable {
+                    haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                    onToggle()
+                }
+                .padding(horizontal = 16.dp, vertical = 12.dp),
     ) {
         Icon(
             imageVector = Icons.Outlined.KeyboardArrowDown,
@@ -69,5 +70,8 @@ fun TodoSectionHeader(
     }
 }
 
-@Preview @Composable private fun CollapsedPreview() = AppTheme { TodoSectionHeader("Done", 3, false, {}) }
-@Preview @Composable private fun ExpandedPreview() = AppTheme { TodoSectionHeader("Done", 3, true, {}) }
+@Preview @Composable
+private fun CollapsedPreview() = AppTheme { TodoSectionHeader("Done", 3, false, {}) }
+
+@Preview @Composable
+private fun ExpandedPreview() = AppTheme { TodoSectionHeader("Done", 3, true, {}) }

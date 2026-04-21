@@ -49,4 +49,5 @@ fun TodoEmptyState(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview @Composable private fun EmptyPreview() = AppTheme { TodoEmptyState() }
+@Preview @Composable
+private fun EmptyPreview() = AppTheme { TodoEmptyState() }

@@ -47,7 +47,10 @@ data class TodoListActions(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TodoListView(state: TodoListState, actions: TodoListActions) {
+fun TodoListView(
+    state: TodoListState,
+    actions: TodoListActions,
+) {
     Scaffold(
         topBar = { TopAppBar(title = { Text("Todos") }) },
         floatingActionButton = {
@@ -62,33 +65,35 @@ fun TodoListView(state: TodoListState, actions: TodoListActions) {
             when {
                 state.status is UiStatus.Loading && state.todos.isEmpty() -> CircularProgressIndicator()
                 state.todos.isEmpty() -> TodoEmptyState()
-                state.active.isEmpty() -> AllCaughtUpView(
-                    doneCount = state.done.size,
-                    isDoneExpanded = state.isDoneExpanded,
-                    done = state.done,
-                    actions = actions,
-                )
-                else -> LazyColumn(Modifier.fillMaxSize()) {
-                    items(state.active, key = { "a-${it.id}" }) { t ->
-                        SwipeableRow(t, actions, modifier = Modifier.animateItem())
-                    }
-                    if (state.done.isNotEmpty()) {
-                        item(key = "done-header") {
-                            TodoSectionHeader(
-                                title = "Done",
-                                count = state.done.size,
-                                expanded = state.isDoneExpanded,
-                                onToggle = actions.onToggleDoneSection,
-                                modifier = Modifier.animateItem(),
-                            )
+                state.active.isEmpty() ->
+                    AllCaughtUpView(
+                        doneCount = state.done.size,
+                        isDoneExpanded = state.isDoneExpanded,
+                        done = state.done,
+                        actions = actions,
+                    )
+                else ->
+                    LazyColumn(Modifier.fillMaxSize()) {
+                        items(state.active, key = { "a-${it.id}" }) { t ->
+                            SwipeableRow(t, actions, modifier = Modifier.animateItem())
                         }
-                        if (state.isDoneExpanded) {
-                            items(state.done, key = { "d-${it.id}" }) { t ->
-                                SwipeableRow(t, actions, modifier = Modifier.animateItem())
+                        if (state.done.isNotEmpty()) {
+                            item(key = "done-header") {
+                                TodoSectionHeader(
+                                    title = "Done",
+                                    count = state.done.size,
+                                    expanded = state.isDoneExpanded,
+                                    onToggle = actions.onToggleDoneSection,
+                                    modifier = Modifier.animateItem(),
+                                )
+                            }
+                            if (state.isDoneExpanded) {
+                                items(state.done, key = { "d-${it.id}" }) { t ->
+                                    SwipeableRow(t, actions, modifier = Modifier.animateItem())
+                                }
                             }
                         }
                     }
-                }
             }
         }
     }
@@ -102,9 +107,10 @@ private fun SwipeableRow(
     modifier: Modifier = Modifier,
 ) {
     val haptics = LocalHapticFeedback.current
-    val dismissState = rememberSwipeToDismissBoxState(
-        positionalThreshold = { it * 0.6f },
-    )
+    val dismissState =
+        rememberSwipeToDismissBoxState(
+            positionalThreshold = { it * 0.6f },
+        )
     LaunchedEffect(dismissState.currentValue) {
         if (dismissState.currentValue == SwipeToDismissBoxValue.EndToStart) {
             haptics.performHapticFeedback(HapticFeedbackType.LongPress)
@@ -167,8 +173,17 @@ private fun AllCaughtUpView(
 
 private fun noOpActions() = TodoListActions({}, {}, {}, {}, {}, {})
 
-@Preview @Composable private fun EmptyPreview() = AppTheme { TodoListView(TodoListFakes.Empty, noOpActions()) }
-@Preview @Composable private fun LoadingPreview() = AppTheme { TodoListView(TodoListFakes.Loading, noOpActions()) }
-@Preview @Composable private fun ItemsPreview() = AppTheme { TodoListView(TodoListFakes.WithItems, noOpActions()) }
-@Preview @Composable private fun WithDonePreview() = AppTheme { TodoListView(TodoListFakes.WithItemsAndDone, noOpActions()) }
-@Preview @Composable private fun AllCaughtUpPreview() = AppTheme { TodoListView(TodoListFakes.OnlyDone, noOpActions()) }
+@Preview @Composable
+private fun EmptyPreview() = AppTheme { TodoListView(TodoListFakes.Empty, noOpActions()) }
+
+@Preview @Composable
+private fun LoadingPreview() = AppTheme { TodoListView(TodoListFakes.Loading, noOpActions()) }
+
+@Preview @Composable
+private fun ItemsPreview() = AppTheme { TodoListView(TodoListFakes.WithItems, noOpActions()) }
+
+@Preview @Composable
+private fun WithDonePreview() = AppTheme { TodoListView(TodoListFakes.WithItemsAndDone, noOpActions()) }
+
+@Preview @Composable
+private fun AllCaughtUpPreview() = AppTheme { TodoListView(TodoListFakes.OnlyDone, noOpActions()) }

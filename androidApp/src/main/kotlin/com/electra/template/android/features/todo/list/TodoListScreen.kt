@@ -13,7 +13,10 @@ import com.electra.template.presentation.todo.list.TodoListViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun TodoListScreen(onNavigate: (Destination) -> Unit, vm: TodoListViewModel = koinViewModel()) {
+fun TodoListScreen(
+    onNavigate: (Destination) -> Unit,
+    vm: TodoListViewModel = koinViewModel(),
+) {
     val state by vm.state.collectAsStateWithLifecycle()
     var showQuickAdd by rememberSaveable { mutableStateOf(false) }
 
@@ -29,14 +32,15 @@ fun TodoListScreen(onNavigate: (Destination) -> Unit, vm: TodoListViewModel = ko
 
     TodoListView(
         state = state,
-        actions = TodoListActions(
-            onRefresh = vm::onRefresh,
-            onCreate = vm::onRequestQuickAdd,
-            onSelect = vm::onSelect,
-            onToggle = vm::onToggle,
-            onDelete = vm::onDelete,
-            onToggleDoneSection = vm::onToggleDoneSection,
-        ),
+        actions =
+            TodoListActions(
+                onRefresh = vm::onRefresh,
+                onCreate = vm::onRequestQuickAdd,
+                onSelect = vm::onSelect,
+                onToggle = vm::onToggle,
+                onDelete = vm::onDelete,
+                onToggleDoneSection = vm::onToggleDoneSection,
+            ),
     )
 
     if (showQuickAdd) {

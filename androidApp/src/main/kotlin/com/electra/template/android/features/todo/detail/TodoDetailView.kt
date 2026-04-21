@@ -42,17 +42,21 @@ data class TodoDetailActions(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TodoDetailView(state: TodoDetailState, actions: TodoDetailActions) {
+fun TodoDetailView(
+    state: TodoDetailState,
+    actions: TodoDetailActions,
+) {
     var showDeleteConfirm by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = { TopAppBar(title = { Text(if (state.id == null) "New todo" else "Edit todo") }) },
     ) { padding ->
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(padding)
-                .padding(horizontal = 24.dp, vertical = 16.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(padding)
+                    .padding(horizontal = 24.dp, vertical = 16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             OutlinedTextField(
@@ -89,9 +93,10 @@ fun TodoDetailView(state: TodoDetailState, actions: TodoDetailActions) {
             if (state.id != null) {
                 OutlinedButton(
                     onClick = { showDeleteConfirm = true },
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = MaterialTheme.colorScheme.error,
-                    ),
+                    colors =
+                        ButtonDefaults.outlinedButtonColors(
+                            contentColor = MaterialTheme.colorScheme.error,
+                        ),
                     modifier = Modifier.fillMaxWidth(),
                 ) { Text("Delete") }
             }
@@ -118,10 +123,10 @@ fun TodoDetailView(state: TodoDetailState, actions: TodoDetailActions) {
     }
 }
 
-@Preview @Composable private fun NewPreview() =
-    AppTheme { TodoDetailView(TodoDetailFakes.New, noOp()) }
+@Preview @Composable
+private fun NewPreview() = AppTheme { TodoDetailView(TodoDetailFakes.New, noOp()) }
 
-@Preview @Composable private fun ExistingPreview() =
-    AppTheme { TodoDetailView(TodoDetailFakes.Existing, noOp()) }
+@Preview @Composable
+private fun ExistingPreview() = AppTheme { TodoDetailView(TodoDetailFakes.Existing, noOp()) }
 
 private fun noOp() = TodoDetailActions({}, {}, {}, {}, {})

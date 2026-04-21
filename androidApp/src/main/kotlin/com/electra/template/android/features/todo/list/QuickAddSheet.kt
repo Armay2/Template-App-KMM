@@ -43,10 +43,11 @@ fun QuickAddSheet(
         sheetState = sheetState,
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .windowInsetsPadding(WindowInsets.ime)
-                .padding(horizontal = 24.dp, vertical = 8.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .windowInsetsPadding(WindowInsets.ime)
+                    .padding(horizontal = 24.dp, vertical = 8.dp),
         ) {
             Text(
                 text = "NEW TODO",
@@ -59,17 +60,19 @@ fun QuickAddSheet(
                 placeholder = { Text("What needs doing?") },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = {
-                    val t = text.trim()
-                    if (t.isNotEmpty()) {
-                        onCreate(t)
-                        onDismiss()
-                    }
-                }),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp, bottom = 24.dp)
-                    .focusRequester(focusRequester),
+                keyboardActions =
+                    KeyboardActions(onDone = {
+                        val t = text.trim()
+                        if (t.isNotEmpty()) {
+                            onCreate(t)
+                            onDismiss()
+                        }
+                    }),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp, bottom = 24.dp)
+                        .focusRequester(focusRequester),
             )
         }
     }

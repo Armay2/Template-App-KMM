@@ -9,7 +9,8 @@ import org.junit.Rule
 import org.junit.Test
 
 class TodoListViewTest {
-    @get:Rule @JvmField val compose = createComposeRule()
+    @get:Rule @JvmField
+    val compose = createComposeRule()
 
     private val noOp = TodoListActions({}, {}, {}, {}, {}, {})
 

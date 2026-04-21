@@ -29,11 +29,12 @@ fun TodoRow(
     val haptics = LocalHapticFeedback.current
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable { onClick(todo.id) }
-            .padding(horizontal = 16.dp, vertical = 12.dp)
-            .alpha(if (todo.done) 0.5f else 1f),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clickable { onClick(todo.id) }
+                .padding(horizontal = 16.dp, vertical = 12.dp)
+                .alpha(if (todo.done) 0.5f else 1f),
     ) {
         Checkbox(
             checked = todo.done,
@@ -51,8 +52,8 @@ fun TodoRow(
     }
 }
 
-@Preview @Composable private fun ActiveRowPreview() =
-    AppTheme { TodoRow(Todo("1", "Buy milk", "", false), {}, {}) }
+@Preview @Composable
+private fun ActiveRowPreview() = AppTheme { TodoRow(Todo("1", "Buy milk", "", false), {}, {}) }
 
-@Preview @Composable private fun DoneRowPreview() =
-    AppTheme { TodoRow(Todo("2", "Walk the dog", "", true), {}, {}) }
+@Preview @Composable
+private fun DoneRowPreview() = AppTheme { TodoRow(Todo("2", "Walk the dog", "", true), {}, {}) }
