@@ -18,13 +18,9 @@ class KmpFeatureConventionPlugin : Plugin<Project> {
         extensions.configure<KotlinMultiplatformExtension> {
             sourceSets.apply {
                 getByName("commonMain").dependencies {
-                    implementation(project(":shared"))
-                    implementation(libs.findLibrary("kotlin-coroutines-core").get())
-                    implementation(libs.findLibrary("kotlin-serialization-json").get())
-                    implementation(libs.findLibrary("koin-core").get())
-                    implementation(libs.findLibrary("koin-core-viewmodel").get())
-                    implementation(libs.findLibrary("kermit").get())
-                    implementation(libs.findLibrary("jb-lifecycle-viewmodel").get())
+                    api(project(":core"))
+                    // core's api(...) on coroutines/serialization/koin/kermit/jb-lifecycle-viewmodel
+                    // propagates transitively — no need to re-declare here.
                 }
                 getByName("commonTest").dependencies {
                     implementation(kotlin("test"))
