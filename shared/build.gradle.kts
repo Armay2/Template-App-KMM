@@ -65,7 +65,7 @@ kotlin {
 
 android {
     namespace = "com.electra.template.shared"
-    compileSdk = 35
+    compileSdk = 36
     defaultConfig {
         minSdk = 26
     }
