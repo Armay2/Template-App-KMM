@@ -2,6 +2,7 @@ package com.electra.template.android.features.todo.detail
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -51,76 +52,102 @@ fun TodoDetailView(
     Scaffold(
         topBar = { TopAppBar(title = { Text(if (state.id == null) "New todo" else "Edit todo") }) },
     ) { padding ->
-        Column(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .padding(padding)
-                    .padding(horizontal = 24.dp, vertical = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            OutlinedTextField(
-                value = state.title,
-                onValueChange = actions.onTitleChange,
-                label = { Text("Title") },
-                textStyle = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.fillMaxWidth(),
-            )
-            OutlinedTextField(
-                value = state.description,
-                onValueChange = actions.onDescriptionChange,
-                label = { Text("Description") },
-                minLines = 4,
-                maxLines = 10,
-                modifier = Modifier.fillMaxWidth(),
-            )
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Text(
-                    text = "Completed",
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.weight(1f),
-                )
-                Switch(checked = state.done, onCheckedChange = { actions.onToggle() })
-            }
-            Spacer(Modifier.height(16.dp))
-            Button(
-                onClick = actions.onSave,
-                modifier = Modifier.fillMaxWidth(),
-            ) { Text("Save") }
-            if (state.id != null) {
-                OutlinedButton(
-                    onClick = { showDeleteConfirm = true },
-                    colors =
-                        ButtonDefaults.outlinedButtonColors(
-                            contentColor = MaterialTheme.colorScheme.error,
-                        ),
-                    modifier = Modifier.fillMaxWidth(),
-                ) { Text("Delete") }
-            }
-        }
+        TodoDetailForm(
+            state = state,
+            actions = actions,
+            onDeleteClick = { showDeleteConfirm = true },
+            contentPadding = padding,
+        )
     }
 
     if (showDeleteConfirm) {
-        AlertDialog(
-            onDismissRequest = { showDeleteConfirm = false },
-            title = { Text("Delete this todo?") },
-            text = { Text("This action cannot be undone.") },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        showDeleteConfirm = false
-                        actions.onDelete()
-                    },
-                ) { Text("Delete", color = MaterialTheme.colorScheme.error) }
+        DeleteConfirmDialog(
+            onConfirm = {
+                showDeleteConfirm = false
+                actions.onDelete()
             },
-            dismissButton = {
-                TextButton(onClick = { showDeleteConfirm = false }) { Text("Cancel") }
-            },
+            onDismiss = { showDeleteConfirm = false },
         )
     }
+}
+
+@Composable
+private fun TodoDetailForm(
+    state: TodoDetailState,
+    actions: TodoDetailActions,
+    onDeleteClick: () -> Unit,
+    contentPadding: PaddingValues,
+) {
+    Column(
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(contentPadding)
+                .padding(horizontal = 24.dp, vertical = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        OutlinedTextField(
+            value = state.title,
+            onValueChange = actions.onTitleChange,
+            label = { Text("Title") },
+            textStyle = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        OutlinedTextField(
+            value = state.description,
+            onValueChange = actions.onDescriptionChange,
+            label = { Text("Description") },
+            minLines = 4,
+            maxLines = 10,
+            modifier = Modifier.fillMaxWidth(),
+        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text(
+                text = "Completed",
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.weight(1f),
+            )
+            Switch(checked = state.done, onCheckedChange = { actions.onToggle() })
+        }
+        Spacer(Modifier.height(16.dp))
+        Button(
+            onClick = actions.onSave,
+            modifier = Modifier.fillMaxWidth(),
+        ) { Text("Save") }
+        if (state.id != null) {
+            OutlinedButton(
+                onClick = onDeleteClick,
+                colors =
+                    ButtonDefaults.outlinedButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error,
+                    ),
+                modifier = Modifier.fillMaxWidth(),
+            ) { Text("Delete") }
+        }
+    }
+}
+
+@Composable
+private fun DeleteConfirmDialog(
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Delete this todo?") },
+        text = { Text("This action cannot be undone.") },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text("Delete", color = MaterialTheme.colorScheme.error)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text("Cancel") }
+        },
+    )
 }
 
 @Preview @Composable

@@ -25,6 +25,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.electra.template.android.theme.AppTheme
 
+private const val HEADER_TITLE_ALPHA = 0.6f
+private const val HEADER_COUNT_ALPHA = 0.4f
+private const val PREVIEW_DONE_COUNT = 3
+
 @Composable
 fun TodoSectionHeader(
     title: String,
@@ -59,19 +63,19 @@ fun TodoSectionHeader(
         Text(
             text = title.uppercase(),
             style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = HEADER_TITLE_ALPHA),
         )
         Spacer(Modifier.width(6.dp))
         Text(
             text = "($count)",
             style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.4f),
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = HEADER_COUNT_ALPHA),
         )
     }
 }
 
 @Preview @Composable
-private fun CollapsedPreview() = AppTheme { TodoSectionHeader("Done", 3, false, {}) }
+private fun CollapsedPreview() = AppTheme { TodoSectionHeader("Done", PREVIEW_DONE_COUNT, false, {}) }
 
 @Preview @Composable
-private fun ExpandedPreview() = AppTheme { TodoSectionHeader("Done", 3, true, {}) }
+private fun ExpandedPreview() = AppTheme { TodoSectionHeader("Done", PREVIEW_DONE_COUNT, true, {}) }

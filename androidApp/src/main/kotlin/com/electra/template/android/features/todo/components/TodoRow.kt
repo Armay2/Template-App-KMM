@@ -19,6 +19,9 @@ import androidx.compose.ui.unit.dp
 import com.electra.template.android.theme.AppTheme
 import com.electra.template.domain.todo.Todo
 
+private const val DONE_ROW_ALPHA = 0.5f
+private const val ACTIVE_ROW_ALPHA = 1f
+
 @Composable
 fun TodoRow(
     todo: Todo,
@@ -34,7 +37,7 @@ fun TodoRow(
                 .fillMaxWidth()
                 .clickable { onClick(todo.id) }
                 .padding(horizontal = 16.dp, vertical = 12.dp)
-                .alpha(if (todo.done) 0.5f else 1f),
+                .alpha(if (todo.done) DONE_ROW_ALPHA else ACTIVE_ROW_ALPHA),
     ) {
         Checkbox(
             checked = todo.done,
