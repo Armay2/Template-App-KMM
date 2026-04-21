@@ -19,8 +19,7 @@ class TodoRepositoryImpl(private val api: TodoApi) : TodoRepository {
     }
 
     @Throws(AppException::class, CancellationException::class)
-    override suspend fun get(id: String): Todo =
-        cache.value.firstOrNull { it.id == id } ?: api.get(id).toDomain()
+    override suspend fun get(id: String): Todo = cache.value.firstOrNull { it.id == id } ?: api.get(id).toDomain()
 
     @Throws(AppException::class, CancellationException::class)
     override suspend fun toggle(id: String) {
@@ -30,7 +29,10 @@ class TodoRepositoryImpl(private val api: TodoApi) : TodoRepository {
     }
 
     @Throws(AppException::class, CancellationException::class)
-    override suspend fun create(title: String, description: String): Todo {
+    override suspend fun create(
+        title: String,
+        description: String,
+    ): Todo {
         val dto = api.create(TodoDto(id = "", title = title, description = description, done = false))
         val created = dto.toDomain()
         cache.update { it + created }

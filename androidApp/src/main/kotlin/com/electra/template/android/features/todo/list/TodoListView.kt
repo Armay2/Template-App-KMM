@@ -33,7 +33,10 @@ data class TodoListActions(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TodoListView(state: TodoListState, actions: TodoListActions) {
+fun TodoListView(
+    state: TodoListState,
+    actions: TodoListActions,
+) {
     Scaffold(
         topBar = { TopAppBar(title = { Text("Todos") }) },
         floatingActionButton = {
@@ -48,21 +51,24 @@ fun TodoListView(state: TodoListState, actions: TodoListActions) {
             when {
                 state.status is UiStatus.Loading && state.todos.isEmpty() -> CircularProgressIndicator()
                 state.todos.isEmpty() -> Text("No todos yet.")
-                else -> LazyColumn(Modifier.fillMaxSize()) {
-                    items(state.todos, key = { it.id }) { t ->
-                        TodoRow(t, onToggle = actions.onToggle, onClick = actions.onSelect)
+                else ->
+                    LazyColumn(Modifier.fillMaxSize()) {
+                        items(state.todos, key = { it.id }) { t ->
+                            TodoRow(t, onToggle = actions.onToggle, onClick = actions.onSelect)
+                        }
                     }
-                }
             }
         }
     }
 }
 
-@Preview @Composable private fun EmptyPreview() =
-    AppTheme { TodoListView(TodoListFakes.Empty, noOpActions()) }
-@Preview @Composable private fun LoadingPreview() =
-    AppTheme { TodoListView(TodoListFakes.Loading, noOpActions()) }
-@Preview @Composable private fun ItemsPreview() =
-    AppTheme { TodoListView(TodoListFakes.WithItems, noOpActions()) }
+@Preview @Composable
+private fun EmptyPreview() = AppTheme { TodoListView(TodoListFakes.Empty, noOpActions()) }
+
+@Preview @Composable
+private fun LoadingPreview() = AppTheme { TodoListView(TodoListFakes.Loading, noOpActions()) }
+
+@Preview @Composable
+private fun ItemsPreview() = AppTheme { TodoListView(TodoListFakes.WithItems, noOpActions()) }
 
 private fun noOpActions() = TodoListActions({}, {}, {}, {})

@@ -13,17 +13,18 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-val todoModule = module {
-    single(named("todoBaseUrl")) { "https://jsonplaceholder.typicode.com" }
-    single { HttpClientFactory.create(get<HttpClientEngine>()) }
-    single { TodoApi(get(), get(named("todoBaseUrl"))) }
-    single<TodoRepository> { TodoRepositoryImpl(get()) }
+val todoModule =
+    module {
+        single(named("todoBaseUrl")) { "https://jsonplaceholder.typicode.com" }
+        single { HttpClientFactory.create(get<HttpClientEngine>()) }
+        single { TodoApi(get(), get(named("todoBaseUrl"))) }
+        single<TodoRepository> { TodoRepositoryImpl(get()) }
 
-    factory { GetTodosUseCase(get()) }
-    factory { ToggleTodoUseCase(get()) }
-    factory { CreateTodoUseCase(get()) }
-    factory { DeleteTodoUseCase(get()) }
+        factory { GetTodosUseCase(get()) }
+        factory { ToggleTodoUseCase(get()) }
+        factory { CreateTodoUseCase(get()) }
+        factory { DeleteTodoUseCase(get()) }
 
-    viewModel { TodoListViewModel(get(), get(), get(), get()) }
-    viewModel { (id: String?) -> TodoDetailViewModel(id, get(), get(), get(), get()) }
-}
+        viewModel { TodoListViewModel(get(), get(), get(), get()) }
+        viewModel { (id: String?) -> TodoDetailViewModel(id, get(), get(), get(), get()) }
+    }

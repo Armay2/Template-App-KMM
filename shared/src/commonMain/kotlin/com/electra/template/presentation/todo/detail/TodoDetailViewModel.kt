@@ -16,10 +16,11 @@ class TodoDetailViewModel(
     private val create: CreateTodoUseCase,
     private val delete: DeleteTodoUseCase,
 ) : BaseViewModel<TodoDetailState, TodoDetailSideEffect>() {
-
     override val initialState = TodoDetailState(id = id)
 
-    init { if (id != null) load() }
+    init {
+        if (id != null) load()
+    }
 
     private fun load() {
         update { it.copy(status = UiStatus.Loading) }
@@ -34,13 +35,20 @@ class TodoDetailViewModel(
     }
 
     fun onTitleChange(v: String) = update { it.copy(title = v) }
+
     fun onDescriptionChange(v: String) = update { it.copy(description = v) }
 
     fun onToggle() {
         val current = state.value.id ?: return
         scope.launch {
-            try { toggle(current); update { it.copy(done = !it.done) } }
-            catch (e: AppException) { emit(TodoDetailSideEffect.ShowError(e.message ?: "error")) }
+            try {
+                toggle(current)
+                update { it.copy(done = !it.done) }
+            } catch (
+                e: AppException,
+            ) {
+                emit(TodoDetailSideEffect.ShowError(e.message ?: "error"))
+            }
         }
     }
 
@@ -60,8 +68,14 @@ class TodoDetailViewModel(
     fun onDelete() {
         val current = state.value.id ?: return
         scope.launch {
-            try { delete(current); emit(TodoDetailSideEffect.Dismiss) }
-            catch (e: AppException) { emit(TodoDetailSideEffect.ShowError(e.message ?: "error")) }
+            try {
+                delete(current)
+                emit(TodoDetailSideEffect.Dismiss)
+            } catch (
+                e: AppException,
+            ) {
+                emit(TodoDetailSideEffect.ShowError(e.message ?: "error"))
+            }
         }
     }
 }

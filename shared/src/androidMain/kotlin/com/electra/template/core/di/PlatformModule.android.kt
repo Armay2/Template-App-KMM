@@ -7,8 +7,9 @@ import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.okhttp.OkHttp
 import org.koin.dsl.module
 
-actual val platformModule = module {
-    single { SettingsFactory(get<Context>()) }
-    single<Settings> { get<SettingsFactory>().create() }
-    single<HttpClientEngine> { OkHttp.create() }
-}
+actual val platformModule =
+    module {
+        single { SettingsFactory(get<Context>()) }
+        single<Settings> { get<SettingsFactory>().create() }
+        single<HttpClientEngine> { OkHttp.create() }
+    }

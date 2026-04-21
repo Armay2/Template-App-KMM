@@ -17,7 +17,10 @@ interface TodoRepository {
     suspend fun toggle(id: String)
 
     @Throws(AppException::class, CancellationException::class)
-    suspend fun create(title: String, description: String): Todo
+    suspend fun create(
+        title: String,
+        description: String,
+    ): Todo
 
     @Throws(AppException::class, CancellationException::class)
     suspend fun delete(id: String)

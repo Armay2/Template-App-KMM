@@ -13,14 +13,33 @@ import io.ktor.http.contentType
 
 class TodoApi(private val client: HttpClient, private val baseUrl: String) {
     suspend fun list(): List<TodoDto> = wrap { client.get("$baseUrl/todos").body() }
-    suspend fun get(id: String): TodoDto = wrap { client.get("$baseUrl/todos/$id").body() }
-    suspend fun create(dto: TodoDto): TodoDto = wrap {
-        client.post("$baseUrl/todos") { contentType(ContentType.Application.Json); setBody(dto) }.body()
-    }
-    suspend fun update(dto: TodoDto): TodoDto = wrap {
-        client.put("$baseUrl/todos/${dto.id}") { contentType(ContentType.Application.Json); setBody(dto) }.body()
-    }
-    suspend fun delete(id: String) { wrap { client.delete("$baseUrl/todos/$id").body<Unit>() } }
 
-    private suspend inline fun <T> wrap(block: () -> T): T = try { block() } catch (t: Throwable) { throw t.toAppException() }
+    suspend fun get(id: String): TodoDto = wrap { client.get("$baseUrl/todos/$id").body() }
+
+    suspend fun create(dto: TodoDto): TodoDto =
+        wrap {
+            client.post("$baseUrl/todos") {
+                contentType(ContentType.Application.Json)
+                setBody(dto)
+            }.body()
+        }
+
+    suspend fun update(dto: TodoDto): TodoDto =
+        wrap {
+            client.put("$baseUrl/todos/${dto.id}") {
+                contentType(ContentType.Application.Json)
+                setBody(dto)
+            }.body()
+        }
+
+    suspend fun delete(id: String) {
+        wrap { client.delete("$baseUrl/todos/$id").body<Unit>() }
+    }
+
+    private suspend inline fun <T> wrap(block: () -> T): T =
+        try {
+            block()
+        } catch (t: Throwable) {
+            throw t.toAppException()
+        }
 }

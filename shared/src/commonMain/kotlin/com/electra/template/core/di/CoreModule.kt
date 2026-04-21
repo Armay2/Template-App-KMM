@@ -13,11 +13,12 @@ import com.electra.template.data.storage.KeyValueStore
 import com.russhwolf.settings.Settings
 import org.koin.dsl.module
 
-val coreModule = module {
-    single<Logger> { KermitLogger() }
-    single<AnalyticsTracker> { NoopAnalyticsTracker() }
-    single<CrashReporter> { NoopCrashReporter() }
-    single<DispatcherProvider> { DefaultDispatcherProvider() }
-    single { DesignTokens.Default }
-    single { KeyValueStore(get<Settings>()) }
-}
+val coreModule =
+    module {
+        single<Logger> { KermitLogger() }
+        single<AnalyticsTracker> { NoopAnalyticsTracker() }
+        single<CrashReporter> { NoopCrashReporter() }
+        single<DispatcherProvider> { DefaultDispatcherProvider() }
+        single { DesignTokens.Default }
+        single { KeyValueStore(get<Settings>()) }
+    }

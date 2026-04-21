@@ -8,7 +8,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.electra.template.android.features.todo.detail.TodoDetailScreen
 import com.electra.template.android.features.todo.list.TodoListScreen
-import com.electra.template.core.navigation.Destination
 
 @Composable
 fun AppNavHost() {
@@ -21,7 +20,13 @@ fun AppNavHost() {
         }
         composable(
             route = Routes.TodoDetailPattern,
-            arguments = listOf(navArgument("id") { type = NavType.StringType; nullable = false })
+            arguments =
+                listOf(
+                    navArgument("id") {
+                        type = NavType.StringType
+                        nullable = false
+                    },
+                ),
         ) { backStack ->
             val raw = backStack.arguments?.getString("id")
             val id = raw?.takeIf { it != "new" }

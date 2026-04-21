@@ -17,7 +17,6 @@ class TodoListViewModel(
     private val create: CreateTodoUseCase,
     private val delete: DeleteTodoUseCase,
 ) : BaseViewModel<TodoListState, TodoListSideEffect>() {
-
     override val initialState = TodoListState()
 
     init {
@@ -40,18 +39,31 @@ class TodoListViewModel(
         }
     }
 
-    fun onSelect(id: String) { scope.launch { emit(TodoListSideEffect.NavigateToDetail(id)) } }
-    fun onCreateNew() { scope.launch { emit(TodoListSideEffect.NavigateToDetail(null)) } }
+    fun onSelect(id: String) {
+        scope.launch { emit(TodoListSideEffect.NavigateToDetail(id)) }
+    }
+
+    fun onCreateNew() {
+        scope.launch { emit(TodoListSideEffect.NavigateToDetail(null)) }
+    }
 
     fun onToggle(id: String) {
         scope.launch {
-            try { toggle(id) } catch (e: AppException) { emit(TodoListSideEffect.ShowError(e.message ?: "error")) }
+            try {
+                toggle(id)
+            } catch (e: AppException) {
+                emit(TodoListSideEffect.ShowError(e.message ?: "error"))
+            }
         }
     }
 
     fun onDelete(id: String) {
         scope.launch {
-            try { delete(id) } catch (e: AppException) { emit(TodoListSideEffect.ShowError(e.message ?: "error")) }
+            try {
+                delete(id)
+            } catch (e: AppException) {
+                emit(TodoListSideEffect.ShowError(e.message ?: "error"))
+            }
         }
     }
 }

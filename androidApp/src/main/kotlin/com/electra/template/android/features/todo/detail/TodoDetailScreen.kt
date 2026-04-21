@@ -28,12 +28,13 @@ fun TodoDetailScreen(
 
     TodoDetailView(
         state = state,
-        actions = TodoDetailActions(
-            onTitleChange = vm::onTitleChange,
-            onDescriptionChange = vm::onDescriptionChange,
-            onToggle = vm::onToggle,
-            onSave = vm::onSave,
-            onDelete = vm::onDelete,
-        ),
+        actions =
+            TodoDetailActions(
+                onTitleChange = vm::onTitleChange,
+                onDescriptionChange = vm::onDescriptionChange,
+                onToggle = vm::onToggle,
+                onSave = vm::onSave,
+                onDelete = vm::onDelete,
+            ),
     )
 }

@@ -8,7 +8,8 @@ import org.junit.Rule
 import org.junit.Test
 
 class TodoListViewTest {
-    @Rule @JvmField val compose = createComposeRule()
+    @Rule @JvmField
+    val compose = createComposeRule()
 
     @Test
     fun displaysItemsWhenStateHasTodos() {

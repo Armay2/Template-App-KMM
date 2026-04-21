@@ -7,6 +7,6 @@ import org.koin.mp.KoinPlatform
 
 object KoinBridge {
     fun todoListViewModel(): TodoListViewModel = KoinPlatform.getKoin().get()
-    fun todoDetailViewModel(id: String?): TodoDetailViewModel =
-        KoinPlatform.getKoin().get { parametersOf(id) }
+
+    fun todoDetailViewModel(id: String?): TodoDetailViewModel = KoinPlatform.getKoin().get { parametersOf(id) }
 }

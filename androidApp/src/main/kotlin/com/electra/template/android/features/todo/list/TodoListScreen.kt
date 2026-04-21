@@ -10,7 +10,10 @@ import com.electra.template.presentation.todo.list.TodoListViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun TodoListScreen(onNavigate: (Destination) -> Unit, vm: TodoListViewModel = koinViewModel()) {
+fun TodoListScreen(
+    onNavigate: (Destination) -> Unit,
+    vm: TodoListViewModel = koinViewModel(),
+) {
     val state by vm.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(vm) {
@@ -24,11 +27,12 @@ fun TodoListScreen(onNavigate: (Destination) -> Unit, vm: TodoListViewModel = ko
 
     TodoListView(
         state = state,
-        actions = TodoListActions(
-            onRefresh = vm::onRefresh,
-            onCreate = vm::onCreateNew,
-            onSelect = vm::onSelect,
-            onToggle = vm::onToggle,
-        ),
+        actions =
+            TodoListActions(
+                onRefresh = vm::onRefresh,
+                onCreate = vm::onCreateNew,
+                onSelect = vm::onSelect,
+                onToggle = vm::onToggle,
+            ),
     )
 }

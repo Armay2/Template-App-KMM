@@ -22,6 +22,11 @@ abstract class BaseViewModel<State : Any, SideEffect : Any> : ViewModel() {
 
     protected val scope: CoroutineScope get() = viewModelScope
 
-    protected fun update(reducer: (State) -> State) { _state.update(reducer) }
-    protected suspend fun emit(effect: SideEffect) { _effects.emit(effect) }
+    protected fun update(reducer: (State) -> State) {
+        _state.update(reducer)
+    }
+
+    protected suspend fun emit(effect: SideEffect) {
+        _effects.emit(effect)
+    }
 }

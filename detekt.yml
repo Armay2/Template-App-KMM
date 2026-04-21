@@ -1,2 +1,27 @@
-# Minimal detekt config — defaults kick in via `buildUponDefaultConfig = true`.
-# Task 5.1 replaces this with the project's tuned ruleset.
+build:
+  maxIssues: 0
+  excludeCorrectable: false
+complexity:
+  LongMethod:
+    threshold: 60
+  LongParameterList:
+    functionThreshold: 8
+    constructorThreshold: 8
+style:
+  MaxLineLength:
+    maxLineLength: 140
+  ReturnCount:
+    max: 4
+  # @Preview composables are intentionally unreferenced — they're invoked by the IDE.
+  UnusedPrivateMember:
+    ignoreAnnotated: ['Preview']
+naming:
+  FunctionNaming:
+    functionPattern: '[a-z][a-zA-Z0-9]*'
+    # @Composable functions follow PascalCase per Compose API guidelines.
+    ignoreAnnotated: ['Composable']
+  # Compose screens often group a data class (actions) + @Composable in one file;
+  # the Composable is the primary export, not the data class. Turn this rule off
+  # rather than maintaining a file-rename exception list.
+  MatchingDeclarationName:
+    active: false

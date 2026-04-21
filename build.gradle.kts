@@ -14,6 +14,14 @@ plugins {
 subprojects {
     apply(plugin = rootProject.libs.plugins.detekt.get().pluginId)
     apply(plugin = rootProject.libs.plugins.ktlint.get().pluginId)
+
+    extensions.configure<io.gitlab.arturbosch.detekt.extensions.DetektExtension> {
+        config.setFrom(rootProject.file("detekt.yml"))
+        buildUponDefaultConfig = true
+        allRules = false
+        autoCorrect = false
+        ignoreFailures = false
+    }
 }
 
 detekt {

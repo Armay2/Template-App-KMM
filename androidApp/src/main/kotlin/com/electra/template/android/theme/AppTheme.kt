@@ -7,7 +7,10 @@ import com.electra.template.core.theme.DesignTokens
 import org.koin.compose.koinInject
 
 @Composable
-fun AppTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+fun AppTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit,
+) {
     val tokens: DesignTokens = koinInject()
     MaterialTheme(
         colorScheme = if (darkTheme) tokens.dark.toDarkScheme() else tokens.light.toLightScheme(),

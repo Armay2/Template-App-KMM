@@ -12,6 +12,12 @@ trim_trailing_whitespace = true
 indent_size = 4
 ktlint_standard_no-wildcard-imports = disabled
 
+# Jetpack Compose: @Composable functions use PascalCase, and const-like route
+# objects are idiomatic. Disable the naming rules that conflict with Compose.
+[androidApp/**.{kt,kts}]
+ktlint_standard_function-naming = disabled
+ktlint_standard_property-naming = disabled
+
 [*.{swift}]
 indent_size = 4
 

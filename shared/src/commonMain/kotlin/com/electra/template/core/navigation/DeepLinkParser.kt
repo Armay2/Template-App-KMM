@@ -2,6 +2,7 @@ package com.electra.template.core.navigation
 
 object DeepLinkParser {
     private const val SCHEME = "template://"
+
     fun parse(url: String): Destination? {
         if (!url.startsWith(SCHEME)) return null
         val path = url.removePrefix(SCHEME).trim('/').split('/')

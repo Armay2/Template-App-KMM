@@ -24,8 +24,14 @@ import kotlin.test.assertIs
 @OptIn(ExperimentalCoroutinesApi::class)
 class TodoListViewModelTest {
     private val dispatcher = StandardTestDispatcher()
-    @BeforeTest fun setMain() { Dispatchers.setMain(dispatcher) }
-    @AfterTest fun resetMain() { Dispatchers.resetMain() }
+
+    @BeforeTest fun setMain() {
+        Dispatchers.setMain(dispatcher)
+    }
+
+    @AfterTest fun resetMain() {
+        Dispatchers.resetMain()
+    }
 
     private fun vm(initial: List<TodoDto>): TodoListViewModel {
         val repo = TodoRepositoryImpl(fakeTodoApi(initial))
@@ -38,20 +44,22 @@ class TodoListViewModelTest {
     }
 
     @Test
-    fun loadsTodosOnRefresh() = runTest(dispatcher) {
-        val vm = vm(listOf(TodoDto("1", "a", "", false)))
-        vm.onRefresh()
-        dispatcher.scheduler.advanceUntilIdle()
-        assertEquals(1, vm.state.value.todos.size)
-        assertIs<UiStatus.Idle>(vm.state.value.status)
-    }
+    fun loadsTodosOnRefresh() =
+        runTest(dispatcher) {
+            val vm = vm(listOf(TodoDto("1", "a", "", false)))
+            vm.onRefresh()
+            dispatcher.scheduler.advanceUntilIdle()
+            assertEquals(1, vm.state.value.todos.size)
+            assertIs<UiStatus.Idle>(vm.state.value.status)
+        }
 
     @Test
-    fun emitsNavigateToDetailOnSelect() = runTest(dispatcher) {
-        val vm = vm(emptyList())
-        vm.effects.test {
-            vm.onSelect("42")
-            assertEquals(TodoListSideEffect.NavigateToDetail("42"), awaitItem())
+    fun emitsNavigateToDetailOnSelect() =
+        runTest(dispatcher) {
+            val vm = vm(emptyList())
+            vm.effects.test {
+                vm.onSelect("42")
+                assertEquals(TodoListSideEffect.NavigateToDetail("42"), awaitItem())
+            }
         }
-    }
 }

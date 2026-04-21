@@ -14,12 +14,16 @@ import com.electra.template.android.theme.AppTheme
 import com.electra.template.domain.todo.Todo
 
 @Composable
-fun TodoRow(todo: Todo, onToggle: (String) -> Unit, onClick: (String) -> Unit) {
+fun TodoRow(
+    todo: Todo,
+    onToggle: (String) -> Unit,
+    onClick: (String) -> Unit,
+) {
     Row(
         Modifier
             .fillMaxWidth()
             .clickable { onClick(todo.id) }
-            .padding(16.dp)
+            .padding(16.dp),
     ) {
         Checkbox(checked = todo.done, onCheckedChange = { onToggle(todo.id) })
         Text(todo.title, Modifier.padding(start = 16.dp))

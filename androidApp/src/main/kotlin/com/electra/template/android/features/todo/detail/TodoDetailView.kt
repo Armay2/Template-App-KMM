@@ -30,7 +30,10 @@ data class TodoDetailActions(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TodoDetailView(state: TodoDetailState, actions: TodoDetailActions) {
+fun TodoDetailView(
+    state: TodoDetailState,
+    actions: TodoDetailActions,
+) {
     Scaffold(topBar = { TopAppBar(title = { Text(if (state.id == null) "New todo" else "Edit todo") }) }) { padding ->
         Column(Modifier.fillMaxWidth().padding(padding).padding(16.dp)) {
             OutlinedTextField(
@@ -54,6 +57,10 @@ fun TodoDetailView(state: TodoDetailState, actions: TodoDetailActions) {
     }
 }
 
-@Preview @Composable private fun NewPreview() = AppTheme { TodoDetailView(TodoDetailFakes.New, noOp()) }
-@Preview @Composable private fun ExistingPreview() = AppTheme { TodoDetailView(TodoDetailFakes.Existing, noOp()) }
+@Preview @Composable
+private fun NewPreview() = AppTheme { TodoDetailView(TodoDetailFakes.New, noOp()) }
+
+@Preview @Composable
+private fun ExistingPreview() = AppTheme { TodoDetailView(TodoDetailFakes.Existing, noOp()) }
+
 private fun noOp() = TodoDetailActions({ _ -> }, { _ -> }, {}, {}, {})
