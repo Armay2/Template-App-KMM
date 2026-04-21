@@ -5,6 +5,9 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning: [S
 
 ## [Unreleased]
 ### Changed
+- Todo list UX polish: active + done sections with collapsible Done, quick-add bottom sheet for creation, swipe-left delete, native haptics, animated transitions, illustrated empty state.
+- Todo detail polish: more generous spacing, delete confirmation (alert on iOS, AlertDialog on Android), primary Save button full-width.
+- `TodoListSideEffect.NavigateToDetail.id` tightened from `String?` to `String`. Creation now flows exclusively through the new `OpenQuickAdd` side-effect. `TodoListViewModel.onCreateNew` renamed to `onRequestQuickAdd`; new `onQuickAdd(title)` and `onToggleDoneSection()` methods added.
 - Replaced Kotlin `expect/actual` with plain interfaces + platform classes injected via Koin. `SettingsFactory` is now an interface in `commonMain`; `AndroidSettingsFactory` / `IosSettingsFactory` implement it. `platformModule` split into `androidPlatformModule` / `iosPlatformModule`. Removed the `-Xexpect-actual-classes` compiler flag.
 
 ## [0.1.0] - 2026-04-21

@@ -24,11 +24,13 @@ From `androidApp/src/main/kotlin/com/electra/template/android/features/todo/list
 
 ```kotlin
 val state by vm.state.collectAsStateWithLifecycle()
+var showQuickAdd by rememberSaveable { mutableStateOf(false) }
 
 LaunchedEffect(vm) {
     vm.effects.collect { e ->
         when (e) {
             is TodoListSideEffect.NavigateToDetail -> onNavigate(Destination.TodoDetail(e.id))
+            TodoListSideEffect.OpenQuickAdd        -> showQuickAdd = true
             is TodoListSideEffect.ShowError        -> { /* snackbar hook */ }
         }
     }
@@ -37,13 +39,17 @@ LaunchedEffect(vm) {
 TodoListView(
     state = state,
     actions = TodoListActions(
-        onRefresh = vm::onRefresh,
-        onCreate  = vm::onCreateNew,
-        onSelect  = vm::onSelect,
-        onToggle  = vm::onToggle,
+        onRefresh           = vm::onRefresh,
+        onCreate            = vm::onRequestQuickAdd,
+        onSelect            = vm::onSelect,
+        onToggle            = vm::onToggle,
+        onDelete            = vm::onDelete,
+        onToggleDoneSection = vm::onToggleDoneSection,
     ),
 )
 ```
+
+The "new todo" FAB binds to `onRequestQuickAdd`, which emits the `OpenQuickAdd` side-effect; the screen reacts by showing a bottom-sheet `QuickAddSheet` rather than navigating to a detail screen with a null id.
 
 `collectAsStateWithLifecycle` (from `androidx.lifecycle.runtime.compose`) pauses collection when the screen is off-screen, avoiding wasted recompositions. `LaunchedEffect(vm)` launches exactly once per VM instance and is cancelled when the composition leaves, matching the effect lifetime to the screen.
 
