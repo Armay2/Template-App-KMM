@@ -2,7 +2,6 @@ plugins {
     id("template.kmp.library")
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.skie)
-    alias(libs.plugins.ksp)
 }
 
 kotlin {
@@ -27,7 +26,6 @@ kotlin {
             implementation(libs.kotlin.coroutines.test)
             implementation(libs.turbine)
             implementation(libs.ktor.client.mock)
-            implementation(libs.mockative)
         }
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
@@ -40,8 +38,4 @@ kotlin {
 
 android {
     namespace = "com.electra.template.shared"
-}
-
-dependencies {
-    add("kspCommonMainMetadata", libs.mockative.processor)
 }

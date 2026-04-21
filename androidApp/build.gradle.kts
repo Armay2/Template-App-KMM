@@ -35,6 +35,7 @@ android {
 
 dependencies {
     implementation(project(":shared"))
+    implementation(project(":feature:todo"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
