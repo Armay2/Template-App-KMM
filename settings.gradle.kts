@@ -20,3 +20,4 @@ dependencyResolutionManagement {
 
 include(":shared")
 include(":androidApp")
+include(":feature:todo")
