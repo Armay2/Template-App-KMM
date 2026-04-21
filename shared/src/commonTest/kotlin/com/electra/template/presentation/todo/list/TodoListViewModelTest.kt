@@ -11,6 +11,7 @@ import com.electra.template.domain.todo.usecase.ToggleTodoUseCase
 import com.electra.template.presentation.base.UiStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -20,6 +21,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
+import kotlin.test.assertTrue
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class TodoListViewModelTest {
@@ -61,5 +63,40 @@ class TodoListViewModelTest {
                 vm.onSelect("42")
                 assertEquals(TodoListSideEffect.NavigateToDetail("42"), awaitItem())
             }
+        }
+
+    @Test
+    fun emitsOpenQuickAddOnRequestQuickAdd() =
+        runTest(dispatcher) {
+            val vm = vm(emptyList())
+            vm.effects.test {
+                vm.onRequestQuickAdd()
+                assertEquals(TodoListSideEffect.OpenQuickAdd, awaitItem())
+            }
+        }
+
+    @Test
+    fun onQuickAddCreatesTodoVisibleInActive() =
+        runTest(dispatcher) {
+            val vm = vm(emptyList())
+            vm.onRefresh()
+            dispatcher.scheduler.advanceUntilIdle()
+            vm.onQuickAdd("Buy bread")
+            val state = vm.state.first { it.todos.isNotEmpty() }
+            assertEquals(1, state.todos.size)
+            assertEquals("Buy bread", state.todos.first().title)
+            assertEquals(1, state.active.size)
+            assertEquals(0, state.done.size)
+        }
+
+    @Test
+    fun onToggleDoneSectionFlipsFlag() =
+        runTest(dispatcher) {
+            val vm = vm(emptyList())
+            assertEquals(false, vm.state.value.isDoneExpanded)
+            vm.onToggleDoneSection()
+            assertTrue(vm.state.value.isDoneExpanded)
+            vm.onToggleDoneSection()
+            assertEquals(false, vm.state.value.isDoneExpanded)
         }
 }

@@ -43,8 +43,18 @@ class TodoListViewModel(
         scope.launch { emit(TodoListSideEffect.NavigateToDetail(id)) }
     }
 
-    fun onCreateNew() {
-        scope.launch { emit(TodoListSideEffect.NavigateToDetail(null)) }
+    fun onRequestQuickAdd() {
+        scope.launch { emit(TodoListSideEffect.OpenQuickAdd) }
+    }
+
+    fun onQuickAdd(title: String) {
+        scope.launch {
+            try {
+                create(title, description = "")
+            } catch (e: AppException) {
+                emit(TodoListSideEffect.ShowError(e.message ?: "error"))
+            }
+        }
     }
 
     fun onToggle(id: String) {
@@ -65,5 +75,9 @@ class TodoListViewModel(
                 emit(TodoListSideEffect.ShowError(e.message ?: "error"))
             }
         }
+    }
+
+    fun onToggleDoneSection() {
+        update { it.copy(isDoneExpanded = !it.isDoneExpanded) }
     }
 }
