@@ -1,12 +1,10 @@
 import SwiftUI
 import Shared
 
-/// Container view for the Todo list. Resolves the Kotlin `TodoListViewModel`
-/// via `KoinBridge`, wraps it with `Observed` for SwiftUI, and forwards
-/// side-effects to the `AppNavigator` in the environment.
 struct TodoListScreen: View {
     @Environment(AppNavigator.self) private var navigator
     @State private var observed: Observed<TodoListState, TodoListSideEffect, TodoListViewModel>
+    @State private var quickAddPresented: Bool = false
 
     init() {
         let vm = KoinBridge.shared.todoListViewModel()
@@ -17,12 +15,20 @@ struct TodoListScreen: View {
         TodoListView(
             state: observed.state,
             actions: TodoListActions(
-                onRefresh: { observed.vm.onRefresh() },
-                onCreate: { observed.vm.onCreateNew() },
+                onRefresh: observed.vm.onRefresh,
+                onCreate: observed.vm.onRequestQuickAdd,
                 onSelect: { id in observed.vm.onSelect(id: id) },
-                onToggle: { id in observed.vm.onToggle(id: id) }
-            )
+                onToggle: { id in observed.vm.onToggle(id: id) },
+                onDelete: { id in observed.vm.onDelete(id: id) },
+                onToggleDoneSection: observed.vm.onToggleDoneSection,
+            ),
         )
+        .sheet(isPresented: $quickAddPresented) {
+            QuickAddSheet(
+                onCreate: { title in observed.vm.onQuickAdd(title: title) },
+                onDismiss: { quickAddPresented = false },
+            )
+        }
         .task { await listen() }
     }
 
@@ -31,6 +37,8 @@ struct TodoListScreen: View {
             switch effect {
             case let e as TodoListSideEffectNavigateToDetail:
                 navigator.push(.todoDetail(id: e.id))
+            case is TodoListSideEffectOpenQuickAdd:
+                quickAddPresented = true
             default:
                 break
             }
