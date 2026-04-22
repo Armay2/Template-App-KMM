@@ -2,7 +2,7 @@
 # Source: https://github.com/touchlab/SKIE/blob/main/common-gradle/gradle.properties
 # `versionSupport.kotlin` lists supported pairs; 0.10.11 covers up to 2.3.20, we keep the 2.2.10 floor per consolidation plan.
 [versions]
-kotlin = "2.2.10"
+kotlin = "2.3.20"
 agp = "8.11.2"
 coroutines = "1.10.2"
 serialization = "1.8.1"
