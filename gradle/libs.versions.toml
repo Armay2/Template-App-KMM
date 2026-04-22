@@ -3,7 +3,7 @@
 # `versionSupport.kotlin` lists supported pairs; 0.10.11 covers up to 2.3.20, we keep the 2.2.10 floor per consolidation plan.
 [versions]
 kotlin = "2.2.10"
-agp = "8.11.2"
+agp = "9.2.0"
 coroutines = "1.10.2"
 serialization = "1.8.1"
 datetime = "0.6.2"
