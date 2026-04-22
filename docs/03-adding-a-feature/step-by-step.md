@@ -1,74 +1,121 @@
 # Adding a feature end-to-end
 
-After reading this you'll have a deterministic recipe for slotting a new feature — say, `Project` — into all three modules.
+After reading this you'll have a deterministic recipe for slotting a new feature — say, `Profile` — into the 3-module architecture (`:core`, `:feature:*`, `:shared`, plus the two apps).
 
-Mirror the existing `todo` tree. Each step produces an independently compilable unit; run `./gradlew :shared:build` between steps as a sanity check.
+Mirror the existing `feature/todo` tree. Each step produces an independently compilable unit; run `./gradlew :feature:profile:build` between steps as a sanity check.
 
-## 1. Domain entity
+See [`docs/01-architecture/modularization.md`](../01-architecture/modularization.md) for the architectural background.
 
-`shared/src/commonMain/kotlin/com/electra/template/domain/project/Project.kt`:
+## 1. Create the module directory
 
-```kotlin
-data class Project(val id: String, val name: String, val archived: Boolean)
+```bash
+mkdir -p feature/profile/src/commonMain/kotlin/com/electra/template/{domain,data,presentation}/profile
+mkdir -p feature/profile/src/commonTest/kotlin/com/electra/template/{domain,data,presentation}/profile
 ```
 
-## 2. Repository interface
+## 2. Create `feature/profile/build.gradle.kts`
 
-`shared/src/commonMain/kotlin/com/electra/template/domain/project/ProjectRepository.kt`. Annotate every `suspend fun` with `@Throws(AppException::class, CancellationException::class)` — mirror `TodoRepository.kt`.
+```kotlin
+plugins { id("template.kmp.feature") }
 
-## 3. Data DTOs + API + mappers
+android { namespace = "com.electra.template.feature.profile" }
+```
 
-Mirror `data/todo/`:
+The `template.kmp.feature` convention plugin applies Kotlin Multiplatform, the Android library, a standard source-set layout, `api(project(":core"))`, and the `commonTest` deps. Add Ktor or other libraries only if the feature needs something beyond what `:core` exposes transitively.
 
-- `ProjectDto.kt` — `@Serializable` with kotlinx-serialization.
-- `ProjectApi.kt` — thin Ktor wrapper with `wrap { ... }.toAppException()` exception translation.
-- `ProjectMapper.kt` — `fun ProjectDto.toDomain()` / `fun Project.toDto()`.
+## 3. Register the module
 
-## 4. Repository implementation
+In `settings.gradle.kts`, add:
 
-`data/project/ProjectRepositoryImpl.kt`. Keep an in-memory `MutableStateFlow<List<Project>>` as the public `projects` Flow; update the cache after each successful remote call. Use `TodoRepositoryImpl.kt` as the reference shape.
+```kotlin
+include(":feature:profile")
+```
 
-## 5. Use cases
+## 4. Wire the feature into `:shared`
 
-`domain/project/usecase/`. One file per verb (`GetProjects`, `CreateProject`, `ArchiveProject`). Skip a use-case if it's a pure 1-line pass-through and you have no validation to add — see ADR 0006 on use-case ergonomics.
+In `shared/build.gradle.kts`:
 
-## 6. Koin module
+- Add `api(projects.feature.profile)` in the `commonMain` dependencies block.
+- Add `export(projects.feature.profile)` inside the iOS framework block so Swift sees the feature's types.
 
-`data/project/ProjectModule.kt` (mirror `TodoModule.kt`). Declare `single<ProjectRepository>`, `single<ProjectApi>`, `factory` per use-case, `viewModel` for each VM. Register the new module in both hosts:
+## 5. Expose to `:androidApp`
 
-- Android: `TemplateApplication.onCreate` → `modules(..., projectModule)`.
-- iOS: `shared/src/iosMain/.../KoinInitializer.kt` → `modules(..., projectModule)`.
+In `androidApp/build.gradle.kts`, add:
 
-## 7. Presentation layer (shared)
+```kotlin
+implementation(project(":feature:profile"))
+```
 
-Under `presentation/project/list/`:
+Explicit even though transitive via `:shared` — it makes the Android-side dependency graph legible.
 
-- `ProjectListState.kt` — `data class` with the view state.
-- `ProjectListSideEffect.kt` — `sealed interface` with navigation / toast events.
-- `ProjectListViewModel.kt` — extends `BaseViewModel<State, SideEffect>`. Call `update { }` to reduce and `emit(...)` to fire events.
-- `ProjectListFakes.kt` — curated instances for previews and tests.
+## 6. Domain
 
-## 8. Navigation
+`feature/profile/src/commonMain/kotlin/com/electra/template/domain/profile/`:
 
-Add the new destination to `core/navigation/Destination.kt` (`data object ProjectList : Destination`, `data class ProjectDetail(val id: String?) : Destination`) and extend `DeepLinkParser`.
+- `Profile.kt` — `data class Profile(val id: String, val displayName: String, val avatarUrl: String?)`.
+- `ProfileRepository.kt` — interface. Annotate every `suspend fun` with `@Throws(AppException::class, CancellationException::class)` (mirror `TodoRepository.kt`).
+- `usecase/` — one verb per file (`GetProfile`, `UpdateDisplayName`). Skip a use case if it's a 1-line pass-through with no validation.
 
-- Android: extend `Routes`, `Destination.toRoute()`, and add `composable(...)` in `AppNavHost.kt`.
-- iOS: add cases to `Route` enum in `AppNavigator.swift` + the `init?(from:)`, then update `DestinationRouter.swift`.
+## 7. Data
 
-## 9. Native screens
+`feature/profile/src/commonMain/kotlin/com/electra/template/data/profile/`:
 
-Duplicate the Todo pattern:
+- `ProfileDto.kt` — `@Serializable`.
+- `ProfileApi.kt` — thin Ktor wrapper using `HttpClientFactory` from `:core`; translate with `wrap { ... }.toAppException()`.
+- `ProfileMapper.kt` — `fun ProfileDto.toDomain()` / `fun Profile.toDto()`.
+- `ProfileRepositoryImpl.kt` — in-memory cache as `MutableStateFlow<Profile?>`, updated after each successful remote call.
+- `ProfileModule.kt` — Koin module: `single<ProfileRepository>`, `single<ProfileApi>`, `factory` per use case, `viewModel` per VM.
 
-- Android: `ProjectListScreen` (container: `koinViewModel()` + `collectAsStateWithLifecycle` + `LaunchedEffect`) and `ProjectListView` (pure, takes `state` + `actions`, provides `@Preview`).
-- iOS: `ProjectListScreen` (container: `KoinBridge.shared.projectListViewModel()` + `Observed`) and `ProjectListView` (pure, `struct ProjectListView: View`, `#Preview`).
+## 8. Presentation
 
-## 10. Tests
+`feature/profile/src/commonMain/kotlin/com/electra/template/presentation/profile/`:
 
-- `commonTest/.../ProjectRepositoryImplTest.kt` with `FakeProjectApi` via Ktor `MockEngine` (see `FakeTodoApi.kt`).
-- `commonTest/.../ProjectListViewModelTest.kt` using `StandardTestDispatcher`, `runTest`, and Turbine for effects.
-- Android: a Compose UI test asserting the empty/items variants of `ProjectListView`.
-- iOS: an XCUITest smoke-checking the navigation bar title if the feature is launchable from root.
+- `ProfileState.kt` — `data class` holding the view state.
+- `ProfileSideEffect.kt` — `sealed interface` for navigation / toast events.
+- `ProfileViewModel.kt` — extends `BaseViewModel<State, SideEffect>` from `:core`. Call `update { }` to reduce, `emit(...)` to fire effects.
+- `ProfileFakes.kt` — curated instances for previews and tests (empty / loading / populated / error).
 
-Run `./gradlew :shared:allTests :androidApp:assembleDebug` and build iOS in Xcode. Add an entry to `CHANGELOG.md`. Done.
+## 9. Tests
 
-See `checklist.md` for the shorter PR-review version.
+`feature/profile/src/commonTest/.../`:
+
+- `ProfileRepositoryImplTest.kt` — `FakeProfileApi` via Ktor `MockEngine` (see `FakeTodoApi.kt`).
+- `ProfileViewModelTest.kt` — `StandardTestDispatcher`, `runTest`, Turbine for effects.
+
+## 10. Navigation
+
+Because navigation types are app-wide, extend them in `:shared`:
+
+- `shared/src/commonMain/.../core/navigation/Destination.kt` — add `data object ProfileHome : Destination` (and any deep-linkable variants).
+- `shared/src/commonMain/.../core/navigation/DeepLinkParser.kt` — extend if the feature is deep-linkable.
+
+Then platform navigation:
+
+- Android: extend `Routes`, `Destination.toRoute()`, and add a `composable(...)` entry in `AppNavHost.kt`.
+- iOS: add cases to the `Route` enum in `AppNavigator.swift` and its `init?(from:)`, then extend `DestinationRouter.swift`.
+
+## 11. Wire Koin
+
+- Android: `TemplateApplication.onCreate` → `modules(..., profileModule)`.
+- iOS: `shared/src/iosMain/.../KoinInitializer.kt` → `modules(..., profileModule)`.
+
+## 12. Native screens
+
+Mirror the Todo pattern (see [ADR-0006](../07-adr/0006-screen-vs-view-split.md)).
+
+- Android: `androidApp/src/main/kotlin/com/electra/template/android/features/profile/`
+  - `ProfileScreen` (container: `koinViewModel()` + `collectAsStateWithLifecycle` + `LaunchedEffect`)
+  - `ProfileView` (pure, takes `state` + `actions`, provides `@Preview` entries using `ProfileFakes`).
+- iOS: `iosApp/iosApp/Features/Profile/`
+  - `ProfileScreen.swift` (container: `KoinBridge.shared.profileViewModel()` + `Observed`)
+  - `ProfileView.swift` (pure, `struct ProfileView: View`, `#Preview` entries).
+
+Run `./gradlew :feature:profile:allTests :androidApp:assembleDebug`, build iOS in Xcode, update `CHANGELOG.md`, done.
+
+See [`checklist.md`](checklist.md) for the shorter PR-review version.
+
+## Common pitfalls
+
+- **Don't** add `implementation(project(":shared"))` to your feature — `:shared` already depends on your feature, so this creates a cycle. The convention plugin wires `api(project(":core"))` for you; that's all you need.
+- **Don't** put UI code in the feature module — UI stays native (`androidApp/` + `iosApp/`). The feature module stops at the ViewModel, consistent with [ADR-0001](../07-adr/0001-kmm-shared-up-to-viewmodel.md).
+- **Don't** forget `export(projects.feature.<name>)` in `shared/build.gradle.kts`'s iOS framework block. Without it, Swift sees `KoinBridge` but not the types it returns, and the generated headers miss your feature entirely.
