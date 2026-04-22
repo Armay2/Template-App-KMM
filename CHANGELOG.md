@@ -5,6 +5,8 @@ Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning: [S
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-04-22
+
 ### Added
 - `build-logic/convention` Gradle included build with two plugins: `template.kmp.library` and `template.kmp.feature`.
 - New `:core` module holding all shared infrastructure (BaseViewModel, AppException, HttpClientFactory, Logger, Analytics, CrashReporter, KeyValueStore, SettingsFactory, CoreModule, ErrorMapper, DispatcherProvider, UiStatus, DesignTokens + platform implementations).
