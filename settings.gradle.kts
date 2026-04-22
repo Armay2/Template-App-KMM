@@ -3,6 +3,7 @@ rootProject.name = "Template-App-KMM"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google()
         mavenCentral()
@@ -17,5 +18,7 @@ dependencyResolutionManagement {
     }
 }
 
+include(":core")
 include(":shared")
 include(":androidApp")
+include(":feature:todo")

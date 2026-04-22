@@ -72,16 +72,20 @@ Then rename the template to your app: [`docs/00-getting-started/rename-the-templ
 
 ```
 .
-├── shared/                  # Kotlin Multiplatform module (domain, data, presentation up to VM)
-│   └── src/
-│       ├── commonMain/      # Platform-agnostic code
-│       ├── androidMain/     # Android-specific bindings
-│       ├── iosMain/         # iOS-specific bindings
-│       └── commonTest/      # Shared tests (Ktor MockEngine, VM tests)
+├── build-logic/convention/  # Gradle convention plugins (template.kmp.library, template.kmp.feature)
+├── core/                    # Shared infrastructure: BaseViewModel, AppException, HttpClientFactory,
+│                            #   Logger, Analytics, CrashReporter, KeyValueStore, DesignTokens, ...
+├── feature/
+│   └── todo/                # Reference feature: domain + data + presentation (VM) + tests
+├── shared/                  # iOS framework umbrella: navigation (Destination, DeepLinkParser)
+│                            #   + iOS DI bridge (KoinBridge, KoinInitializer). api()/export()s
+│                            #   :core and every :feature:* so Xcode links a single Shared.framework.
 ├── androidApp/              # Jetpack Compose app, Material 3 theme derived from shared tokens
 ├── iosApp/                  # SwiftUI app (iOS 26), generic Observed wrapper for all VMs
 └── docs/                    # Architecture, patterns, ADRs, extension paths
 ```
+
+See [`docs/01-architecture/modularization.md`](docs/01-architecture/modularization.md) for how the modules fit together and [ADR-0007](docs/07-adr/0007-feature-modularization.md) for the rationale.
 
 ## Documentation
 
