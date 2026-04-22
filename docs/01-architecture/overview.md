@@ -1,23 +1,26 @@
 # Architecture overview
 
-After reading this you'll know the three Gradle modules, the four layers inside `shared`, and how a user intent travels through them.
+After reading this you'll know the Gradle module layout, the four layers inside each feature, and how a user intent travels through them.
 
 ## Modules
 
-The repo is a three-module Gradle build (`settings.gradle.kts`):
+The repo is a multi-module Gradle build (`settings.gradle.kts`):
 
-- `shared` — Kotlin Multiplatform library (Android AAR + iOS XCFramework, packaged as `Shared.framework`).
-- `androidApp` — Compose / Material 3 app that depends on `:shared`.
-- `iosApp` — SwiftUI app linking `Shared.framework`, produced by Xcode with SKIE-post-processed bindings.
+- `:core` — Kotlin Multiplatform library with shared infrastructure (`BaseViewModel`, `AppException`, `HttpClientFactory`, `Logger`, `Analytics`, `CrashReporter`, `KeyValueStore`, `SettingsFactory`, `DispatcherProvider`, `UiStatus`, `DesignTokens`). No feature code.
+- `:feature:<name>` — one module per feature, each holding its own `domain`, `data`, and `presentation` (VM). `:feature:todo` is the reference.
+- `:shared` — iOS framework umbrella. Holds only app-wide navigation (`Destination`, `DeepLinkParser`) and the iOS DI bridge (`KoinBridge`, `KoinInitializer`), and re-exports `:core` + every `:feature:*` so Xcode sees one `Shared.framework`.
+- `:androidApp` — Compose / Material 3 app depending on `:shared` + each `:feature:*`.
+- `:iosApp` — SwiftUI app linking `Shared.framework`, produced by Xcode with SKIE-post-processed bindings.
 
-## Shared layers
+Two Gradle convention plugins in `build-logic/convention/` keep per-module build files tiny: `template.kmp.library` (generic KMP lib) and `template.kmp.feature` (adds `api(:core)` + standard test deps). See [`modularization.md`](modularization.md) and [ADR-0007](../07-adr/0007-feature-modularization.md).
 
-Inside `shared/src/commonMain/kotlin/com/electra/template/`:
+## Feature layers
 
-- `core/` — cross-cutting: `DesignTokens`, `Destination`, `AppException`, `Logger`, `AnalyticsTracker`, `CrashReporter`, `DispatcherProvider`, DI modules.
-- `data/` — Ktor client, DTOs, repositories, `KeyValueStore` over `multiplatform-settings`.
-- `domain/` — plain entities (`Todo`), repository interfaces, use-cases.
-- `presentation/` — `BaseViewModel<State, SideEffect>`, `UiStatus`, feature VMs and `*Fakes.kt` for previews/tests.
+Inside `feature/<name>/src/commonMain/kotlin/com/electra/template/`:
+
+- `domain/<name>/` — plain entities, repository interfaces, use cases.
+- `data/<name>/` — Ktor API, DTOs, mappers, repository impl, Koin module.
+- `presentation/<name>/` — `State`, `SideEffect`, `ViewModel` (extends `BaseViewModel` from `:core`), `Fakes` for previews/tests.
 
 ## Diagram
 
@@ -30,13 +33,21 @@ Inside `shared/src/commonMain/kotlin/com/electra/template/`:
                               |
                               v
 +-------------------------------------------------------------+
-|                         shared (KMM)                        |
-|   presentation  -> BaseViewModel<State, SideEffect>         |
-|                 -> TodoListViewModel, TodoDetailViewModel   |
+|                   :shared (iOS framework umbrella)          |
+|   core/navigation  -> Destination, DeepLinkParser           |
+|   iosMain          -> KoinBridge, KoinInitializer           |
+|                       api(:core) + api(:feature:*)          |
+|                       export(:core) + export(:feature:*)    |
++-------------------------------------------------------------+
+|                    :feature:todo                            |
+|   presentation  -> TodoListViewModel, TodoDetailViewModel   |
 |   domain        -> Todo, TodoRepository, *UseCase           |
 |   data          -> TodoApi (Ktor) -> TodoRepositoryImpl     |
-|                 -> KeyValueStore (Settings)                 |
-|   core          -> AppException, Destination, DI, tokens    |
++-------------------------------------------------------------+
+|                    :core                                    |
+|   BaseViewModel, AppException, HttpClientFactory,           |
+|   Logger, Analytics, CrashReporter, KeyValueStore,          |
+|   SettingsFactory, DispatcherProvider, DesignTokens         |
 +-------------------------------------------------------------+
                               ^
                               |
